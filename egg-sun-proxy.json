@@ -1,0 +1,40 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v1",
+        "update_url": null
+    },
+    "exported_at": "2021-01-02T20:33:01+01:00",
+    "name": "SunProxy",
+    "author": "itzlightyhd@gmail.com",
+    "description": "A Ptero Egg for the Sun Proxy.",
+    "features": null,
+    "images": [
+        "quay.io\/parkervcp\/pterodactyl-images:base_debian"
+    ],
+    "startup": ".\/{{SUN_FILE}}",
+    "config": {
+        "files": "{\r\n    \"config.yml\": {\r\n        \"parser\": \"yml\",\r\n        \"find\": {\r\n            \"proxy\": {\r\n                 \"port\": \"{{server.build.default.port}}\"\r\n            }\r\n        }\r\n    }\r\n}",
+        "startup": "{\r\n    \"done\": \"Starting Sun On \"\r\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\r\necho -e \"Installing required dependencies\"\r\napt update\r\napt install -y wget dos2unix\r\n\r\nif [ ! -d \/mnt\/server ]; then\r\n    mkdir \/mnt\/server\r\nfi\r\n\r\ncd \/mnt\/server\r\n\r\necho -e \"Downloading the latest SunProxy build\"\r\nwget -qO sun_linux64 https:\/\/sunproxy.ml\/api\/v0\/download.php --show-progress\r\nchmod +x sun_linux64\r\necho -e \"Download the default SunProxy config\"\r\nwget -qO config.yml https:\/\/raw.githubusercontent.com\/AetherPlace\/PterodactylEggs\/main\/sunproxy\/config.yml --show-progress\r\ndos2unix -q config.yml\r\necho -e \"Installation complete\"",
+            "container": "debian:buster-slim",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "SUN_FILE",
+            "description": "The Sun File name",
+            "env_variable": "SUN_FILE",
+            "default_value": "sun_linux64",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:20"
+        }
+    ]
+}
